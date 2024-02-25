@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% block content %}
+    <article class="media content-section">
+        <div class="row g-0">
+            <img class="rounded-circle article-img col-1" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}">
+            <div class="media-body col">
+                <div class="article-metadata row g-0">
+                    <a class="article-author col-auto mt-auto mb-0" href="{{ url_for('users.user_posts', username=post.author.username) }}">{{ post.author.username }}</a>
+                    <small class="text-muted col text-end mt-auto mb-1 pe-2">{{ post.date_posted.strftime('%d %b %Y, %-I:%M%p') }}</small>
+                    {% if post.author == current_user %}
+                        <div class="col-auto text-end">
+                            <a class="btn btn-outline-secondary ms-1" href="{{ url_for('posts.update_post', post_id=post.id) }}"
+                                style="--bs-btn-padding-y: .05rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Update</a>
+                            <button type="button" class="btn btn-outline-danger m-1" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                                style="--bs-btn-padding-y: .05rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Delete</button>
+                        </div>
+                    {% endif %}
+                </div>
+                <h2 class="article-title">{{ post.title }}</h2>
+                <p class="article-content">{{ post.content }}</p>
+            </div>
+        </div>
+    </article>
+
+    <!-- Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="deleteModalLabel">Delete Post</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete this post?</br>You cannot undo this!
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                    <form action="{{ url_for('posts.delete_post', post_id=post.id) }}" method="POST">
+                        <input type="submit" class="btn btn-outline-danger" value="Delete">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}
